@@ -1,18 +1,27 @@
-FROM nginx:1.11.10
+FROM openjdk:8
 
-RUN echo "deb http://ftp.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/backports.list
+MAINTAINER vitalcode
 
 RUN apt-get update && \
-    apt-get -y install certbot -t jessie-backports && \
-    apt-get -y install apache2-utils
+    apt-get -y install jq
 
-RUN mkdir -p /var/www/fillyourday
+ENV KAFKA_VERSION=0.10.2.0
+ENV SCALA_VERSION=2.12
 
-COPY ./conf/ /etc/nginx/
-COPY ./app.conf /etc/nginx/conf.d/
-COPY ./cert/ /etc/letsencrypt/live/fillyourday.com/
-COPY ./start.sh .
+ENV KAFKA_FILE="kafka_${SCALA_VERSION}-${KAFKA_VERSION}"
+ENV KAFKA_ARCHIVE_PATH="/tmp/${KAFKA_FILE}.tgz"
+ENV KAFKA_HOME="/opt/kafka"
+ENV PATH=${PATH}:${KAFKA_HOME}/bin
 
-RUN chmod +x ./start.sh
+RUN APACHE_MIRROR=$(curl --stderr /dev/null https://www.apache.org/dyn/closer.cgi\?as_json\=1 | jq -r ".preferred") && \
+    KAFKA_URL="${APACHE_MIRROR}/kafka/${KAFKA_VERSION}/${KAFKA_FILE}.tgz" && \
+    wget "${KAFKA_URL}" -O ${KAFKA_ARCHIVE_PATH} && \
+    tar xfz ${KAFKA_ARCHIVE_PATH} -C /opt && \
+    ln -s /opt/${KAFKA_FILE} ${KAFKA_HOME}
 
-ENTRYPOINT ["./start.sh"]
+VOLUME ["/kafka"]
+
+ADD start-kafka.sh /usr/bin/
+RUN chmod +x /usr/bin/start-kafka.sh
+
+CMD ["start-kafka.sh"]

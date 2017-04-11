@@ -19,9 +19,11 @@ RUN APACHE_MIRROR=$(curl --stderr /dev/null https://www.apache.org/dyn/closer.cg
     tar xfz ${KAFKA_ARCHIVE_PATH} -C /opt && \
     ln -s /opt/${KAFKA_FILE} ${KAFKA_HOME}
 
-VOLUME ["/kafka"]
-
-ADD start-kafka.sh /usr/bin/
+COPY start-kafka.sh /usr/bin/
 RUN chmod +x /usr/bin/start-kafka.sh
+
+COPY kafka-server.properties  ${KAFKA_HOME}/config/
+
+EXPOSE 9092
 
 CMD ["start-kafka.sh"]

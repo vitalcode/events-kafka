@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# By default auto allocate broker ID
+[[ -z "$KAFKA_BROKER_ID" ]] && export KAFKA_BROKER_ID=-1
+
 for VAR in `env`
 do
   if [[ $VAR =~ ^KAFKA_ && ! $VAR =~ ^KAFKA_HOME ]]; then

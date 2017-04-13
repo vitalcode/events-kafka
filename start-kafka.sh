@@ -19,7 +19,7 @@ ${KAFKA_HOME}/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties &
 
 # Test kafka
 TEST_WAIT=0.2
-TEST_TOPIC=test-topic2
+TEST_TOPIC=test-topic-${HOSTNAME}
 TEST_MESSAGES_PATH=test-messages
 
 pkill -9 -f ConsoleConsumer

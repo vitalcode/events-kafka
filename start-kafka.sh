@@ -29,9 +29,9 @@ pkill -9 -f ConsoleConsumer
 
 cd $KAFKA_HOME
 BROKER_STARTED=0
-BROKER_IDS=$(bin/zookeeper-shell.sh $KAFKA_ZOOKEEPER_CONNECT ls /brokers/ids | sed -E -n 's|\[[0-9]+|&|gp' | sed -E 's|[^0-9 ]+||g')
 
 while [[ $BROKER_STARTED -eq 0 ]]; do
+    BROKER_IDS=$(bin/zookeeper-shell.sh $KAFKA_ZOOKEEPER_CONNECT ls /brokers/ids | sed -E -n 's|\[[0-9]+|&|gp' | sed -E 's|[^0-9 ]+||g')
     for id in $BROKER_IDS; do
         echo "Test if broker with id [$id] has started"
         if bin/zookeeper-shell.sh $KAFKA_ZOOKEEPER_CONNECT get /brokers/ids/$id 2>&1  | grep $HOSTNAME;then BROKER_STARTED=1;fi

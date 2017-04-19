@@ -9,7 +9,6 @@ do
     kafka_name=`echo "$VAR" | sed -r "s/KAFKA_(.*)=.*/\1/g" | tr '[:upper:]' '[:lower:]' | tr _ .`
     env_var=`echo "$VAR" | sed -r "s/(.*)=.*/\1/g"`
     env_value=$(eval "echo ${!env_var}")
-    export env_var=$(eval "echo ${env_var}")
     if egrep -q "(^|^#)$kafka_name=" $KAFKA_HOME/config/server.properties; then
         sed -r -i "s@(^|^#)($kafka_name)=(.*)@\2=${env_value}@g" $KAFKA_HOME/config/server.properties #note that no config values may contain an '@' char
     else
@@ -17,6 +16,8 @@ do
     fi
   fi
 done
+
+KAFKA_JMX_OPTS=$(eval "echo ${KAFKA_JMX_OPTS}")
 
 echo "Starting kafka"
 ${KAFKA_HOME}/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties &

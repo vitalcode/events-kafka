@@ -9,6 +9,7 @@ do
     kafka_name=`echo "$VAR" | sed -r "s/KAFKA_(.*)=.*/\1/g" | tr '[:upper:]' '[:lower:]' | tr _ .`
     env_var=`echo "$VAR" | sed -r "s/(.*)=.*/\1/g"`
     env_value=$(eval "echo ${!env_var}")
+    export env_var=$(eval "echo ${env_var}")
     if egrep -q "(^|^#)$kafka_name=" $KAFKA_HOME/config/server.properties; then
         sed -r -i "s@(^|^#)($kafka_name)=(.*)@\2=${env_value}@g" $KAFKA_HOME/config/server.properties #note that no config values may contain an '@' char
     else
@@ -40,7 +41,7 @@ while [[ $BROKER_STARTED -eq 0 ]]; do
     done
 done
 
-echo "Kafka has started"
+echo "[$(date '+%Y-%m-%d %H:%M:%S,%3N')] Kafka has started"
 
 echo "Running Kafka smoke test"
 echo "KZK $KAFKA_ZOOKEEPER_CONNECT"

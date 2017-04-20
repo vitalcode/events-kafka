@@ -3,7 +3,8 @@ FROM openjdk:8
 MAINTAINER vitalcode
 
 RUN apt-get update && \
-    apt-get -y install jq
+    apt-get -y install jq dnsutils
+
 
 ENV KAFKA_VERSION=0.10.2.0
 ENV SCALA_VERSION=2.12

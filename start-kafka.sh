@@ -3,6 +3,8 @@
 # By default auto allocate broker ID
 [[ -z "$KAFKA_BROKER_ID" ]] && export KAFKA_BROKER_ID=-1
 
+KAFKA_JMX_OPTS=$(eval "echo ${KAFKA_JMX_OPTS}")
+
 for VAR in `env`
 do
   if [[ $VAR =~ ^KAFKA_ && ! $VAR =~ ^KAFKA_HOME ]]; then
@@ -16,8 +18,6 @@ do
     fi
   fi
 done
-
-KAFKA_JMX_OPTS=$(eval "echo ${KAFKA_JMX_OPTS}")
 
 echo "Starting kafka"
 ${KAFKA_HOME}/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties &

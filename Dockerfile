@@ -25,6 +25,6 @@ RUN chmod +x /usr/bin/start-kafka.sh
 
 COPY kafka-server.properties  ${KAFKA_HOME}/config/
 
-EXPOSE 9092 1888
+EXPOSE 9092 1099
 
 CMD ["start-kafka.sh"]

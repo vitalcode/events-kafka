@@ -27,6 +27,8 @@ TEST_WAIT=0.2
 TEST_TOPIC=test-topic-${HOSTNAME}
 TEST_MESSAGES_PATH=test-messages
 
+JMX_PORT=""
+
 pkill -9 -f ConsoleConsumer
 
 cd $KAFKA_HOME
